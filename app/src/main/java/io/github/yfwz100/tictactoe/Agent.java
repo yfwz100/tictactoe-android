@@ -11,58 +11,26 @@ public class Agent {
 
     private final static Agent agent = new Agent();
 
-    public static class Choice {
-        private int x;
-        private int y;
-        private int utility;
-
-        public Choice() {
-        }
-
-        public Choice(int x, int y, int utility) {
-            this.x = x;
-            this.y = y;
-            this.utility = utility;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public void setX(int x) {
-            this.x = x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public void setY(int y) {
-            this.y = y;
-        }
-
-        public int getUtility() {
-            return utility;
-        }
-
-        public void setUtility(int utility) {
-            this.utility = utility;
-        }
-
-        @Override
-        public String toString() {
-            return "Choice{" +
-                    "x=" + x +
-                    ", y=" + y +
-                    ", utility=" + utility +
-                    '}';
-        }
-    }
-
+    /**
+     * Singleton constructor.
+     *
+     * @see #getInstance()
+     */
     private Agent() {
         // singleton.
     }
 
+    public static Agent getInstance() {
+        return agent;
+    }
+
+    /**
+     * Get the chances to win. The larger the more likely.
+     *
+     * @param board the board.
+     * @param mark  the mark of the player.
+     * @return the chances.
+     */
     protected int getChancesToWin(Board board, Board.Mark mark) {
         int chances = 0;
         // row first.
@@ -103,6 +71,13 @@ public class Agent {
         return chances;
     }
 
+    /**
+     * Get the minimum steps to win the game. If it equals to 0 then the game is ended.
+     *
+     * @param board the board.
+     * @param mark  the mark of the player.
+     * @return the minimum steps.
+     */
     protected int getMinimumStepsToWin(Board board, Board.Mark mark) {
         int minSteps = 3;
         // Check row.
@@ -157,6 +132,16 @@ public class Agent {
         return minSteps;
     }
 
+    /**
+     * Get the utility if the player place a mark on the given position.
+     *
+     * @param board the board of the game.
+     * @param mark  the mark.
+     * @param x     the position x.
+     * @param y     the position y.
+     * @param steps the minimum steps.
+     * @return the utility.
+     */
     protected int getUtility(Board board, Board.Mark mark, int x, int y, int steps) {
         if (board.get(x, y) == Board.Mark.NA) {
             // Make a copy to ensure not to pollute the original board.
@@ -179,6 +164,14 @@ public class Agent {
         }
     }
 
+    /**
+     * Get the best choice of the agent in given status of the board.
+     *
+     * @param board the board of the game.
+     * @param mark  the mark of the player.
+     * @param steps the steps to consider.
+     * @return the choice.
+     */
     public Choice getBestChoice(Board board, Board.Mark mark, int steps) {
         int maxUtility = Integer.MIN_VALUE;
         Board.BoardCell position = null;
@@ -196,12 +189,78 @@ public class Agent {
         }
     }
 
+    /**
+     * Get the best choice of the agent in given status of the board. This is the same as
+     * {@link #getBestChoice(Board, Board.Mark, int)} with steps default to 1.
+     *
+     * @param board the board of the game.
+     * @param mark  the mark of the player.
+     * @return the choice.
+     * @see #getBestChoice(Board, Board.Mark, int)
+     */
     public Choice getBestChoice(Board board, Board.Mark mark) {
         return getBestChoice(board, mark, 1);
     }
 
-    public static Agent getInstance() {
-        return agent;
+    /**
+     * The choice of the agent.
+     */
+    public static class Choice {
+        private int x;
+        private int y;
+        private int utility;
+
+        /**
+         * Construct an empty choice.
+         */
+        public Choice() {
+        }
+
+        /**
+         * Construct a choice by given position and utlity.
+         *
+         * @param x       the position x.
+         * @param y       the position y.
+         * @param utility the utility.
+         */
+        public Choice(int x, int y, int utility) {
+            this.x = x;
+            this.y = y;
+            this.utility = utility;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public void setY(int y) {
+            this.y = y;
+        }
+
+        public int getUtility() {
+            return utility;
+        }
+
+        public void setUtility(int utility) {
+            this.utility = utility;
+        }
+
+        @Override
+        public String toString() {
+            return "Choice{" +
+                    "x=" + x +
+                    ", y=" + y +
+                    ", utility=" + utility +
+                    '}';
+        }
     }
 
 }

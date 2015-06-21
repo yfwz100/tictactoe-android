@@ -20,11 +20,11 @@ import io.github.yfwz100.tictactoe.Board;
 import io.github.yfwz100.tictactoe.R;
 
 /**
- * The main activity.
+ * The main activity of the TicTacToe game.
  *
  * @author yfwz100
  */
-public class MainActivity extends AppCompatActivity implements Board.BoardCellUpdateNotifier {
+public class MainActivity extends AppCompatActivity implements Board.BoardCellChangeListener {
 
     private final Agent agent = Agent.getInstance();
 
@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements Board.BoardCellUp
 
     private int firstPlayer = 0;
 
+    /**
+     * Initialized the game. It will reset all the status of the game.
+     */
     public void initGame() {
         board = new Board();
         board.addCellNotifier(this);
@@ -52,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements Board.BoardCellUp
         }
     }
 
+    /**
+     * Enable the cell buttons. The non-empty cell is ignored and remain unchanged.
+     */
     protected void enableBoardCells() {
         for (Button btn : cellButtons) {
             if (btn.getText().equals(getString(R.string.empty_text))) {
@@ -60,12 +66,18 @@ public class MainActivity extends AppCompatActivity implements Board.BoardCellUp
         }
     }
 
+    /**
+     * Disable the cell buttons.
+     */
     protected void disableBoardCells() {
         for (Button btn : cellButtons) {
             btn.setEnabled(false);
         }
     }
 
+    /**
+     * The task to get the status of the game.
+     */
     protected class GameStatusTask extends AsyncTask<Void, Integer, Board.Status> {
 
         @Override
@@ -102,10 +114,16 @@ public class MainActivity extends AppCompatActivity implements Board.BoardCellUp
             }
         }
 
+        /**
+         * Override this method to do something after checking the game is running.
+         */
         protected void onGameContinues() {
         }
     }
 
+    /**
+     * The task for agent to make a choice.
+     */
     protected class AgentChoiceTask extends AsyncTask<Void, Integer, Agent.Choice> {
 
         @Override
